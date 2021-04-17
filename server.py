@@ -10,6 +10,8 @@ import random
 import string
 import json
 
+print("----- BRRY CLI -----")
+ip = input("IP ADDRESS: ")
 app = FastAPI()
 logger.add("api.log", format="[{time}] {level} - {message}", level="INFO", rotation="1 week", enqueue=True)
 
@@ -38,4 +40,4 @@ async def upload(item: Item):
 
 if __name__ == "__main__":
     logger.info("Starting app")
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host=ip, port=80)
