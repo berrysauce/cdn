@@ -15,6 +15,10 @@ logger.add("api.log", format="[{time}] {level} - {message}", level="INFO", rotat
 
 class Item(BaseModel):
     image: str
+    
+@app.get("/")
+async def root():
+    return {"msg": "BERRYSAUCE API - CODE/LICENSE ON GITHUB.COM/BERRYSAUCE/CDN"}
 
 @app.get("/image/{imgID}")
 async def get_image(imgID):
