@@ -1,0 +1,6 @@
+loguru==0.5.3
+uvicorn==0.13.4
+requests==2.25.1
+pydantic==1.8.1
+fastapi==0.63.0
+typer==0.3.2
