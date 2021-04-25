@@ -1,6 +1,7 @@
-loguru==0.5.3
-uvicorn==0.13.4
-requests==2.25.1
+pyfiglet==0.8.post1
 pydantic==1.8.1
+uvicorn==0.13.4
+loguru==0.5.3
 fastapi==0.63.0
-typer==0.3.2
+Pillow==8.2.0
+secrets==1.0.2
