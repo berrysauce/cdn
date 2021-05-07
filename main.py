@@ -46,6 +46,7 @@ directory = "data"
 
 class Item(BaseModel):
     image: str
+    file_type: str
     
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     if hashing.verifypw(credentials.password) == False:
@@ -69,12 +70,10 @@ async def root():
     return {"msg": "BERRYSAUCE CDN - CODE/LICENSE ON GITHUB.COM/BERRYSAUCE/CDN"}
 
 @app.get("/image/{imgID}")
-async def get_image(imgID):
+async def get_image(imgID, file_type: str):
     try:
-        with open(directory+"/images/"+imgID+".png", "rb") as img:
-            img.read()
         logger.info("Image request received & completed")
-        return FileResponse(directory+"/images/"+imgID+".png")
+        return FileResponse(directory+"/images/"+imgID+file_type)
     except IOError:
         logger.warning("Requested Image couldn't be found")
         return {"msg": "Error - Image doesn't exist"}
@@ -85,26 +84,26 @@ async def upload(item: Item, username: str = Depends(get_current_username)):
     imgID = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 20))
 
     # Save Image
-    with open(directory+"/images/"+imgID+".png", "wb") as img:
+    with open(directory+"/images/"+imgID+item.file_type, "wb") as img:
         img.write(base64.b64decode(item.image))
     
     # Compress Image
-    img = Image.open(directory+"/images/"+imgID+".png")
-    img.save(directory+"/images/"+imgID+".png",optimize=True,quality=80)
+    img = Image.open(directory+"/images/"+imgID+item.file_type)
+    img.save(directory+"/images/"+imgID+item.file_type,optimize=True,quality=80)
     logger.info("Compressed image")
     
     logger.info("Upload request completed")
     return {
         "msg": "Image uploaded",
         "img_id": imgID,
-        "img_url": config.get("SERVER", "host")+"/image/"+imgID
+        "img_url": config.get("SERVER", "host")+"/image/"+imgID+"?file_type="+item.file_type
         }
     
-@app.post("/delete/{imgID}")
-async def delete(imgID, username: str = Depends(get_current_username)):
+@app.delete("/delete/{imgID}")
+async def delete(imgID, file_type: str, username: str = Depends(get_current_username)):
     logger.info(f"Delete request received from user {username}")
     try:
-        os.remove(directory+"/images/"+imgID+".png")
+        os.remove(directory+"/images/"+imgID+file_type)
         logger.info("Delete request completed")
         return {"msg": "Image deleted sucessfully"}
     except:
