@@ -36,6 +36,13 @@ def start():
             logger.error("The 'data/images' folder already exists. Please delete it and try again.")
             logger.warning("Canceling setup and stopping app")
             quit()
+        try:
+            os.mkdir("data/image_data")
+            logger.info("Created 'data/image_data' folder")
+        except:
+            logger.error("The 'data/image_data' folder already exists. Please delete it and try again.")
+            logger.warning("Canceling setup and stopping app")
+            quit()
         
         print(50 * "-")
         print("Starting setup - all values (except the Password) \ncan be changed in data/config.ini.")
